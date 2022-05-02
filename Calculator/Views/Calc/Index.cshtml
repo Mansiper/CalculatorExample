@@ -1,0 +1,43 @@
+﻿@model Calculator.Dto.CalcDto;
+
+@{
+    ViewData["Title"] = "Calculator";
+    var prevResults = ViewBag.PrevResults as List<Calc>;
+}
+<h1>@ViewData["Title"]</h1>
+
+<label>Available operations: + - * / ^ ( )</label>
+<form asp-action="Calc" method="post" asp-antiforgery="true" class="form-inline">
+    <label class="sr-only" asp-for="Expression"></label>
+    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+        <label asp-for="Expression">Enter expression</label>
+        <input type="text" asp-for="Expression" class="form-control" placeholder="Enter expression"/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Solve</button>
+    <br/>
+</form>
+<span asp-validation-for="Expression" class="text-danger"></span>
+
+@if (Model?.Result.HasValue ?? false)
+{
+    <br />
+    <div class="row">
+        <div class="col-sm-2">
+            <label asp-for="Result">@Model.Result.Value</label>
+        </div>
+        <div class="col-sm-10">
+            <label asp-for="ResultString">@Model.ResultString</label>
+        </div>
+    </div>
+}
+
+@if (prevResults?.Any() ?? false)
+{
+    <table>
+        @foreach (var result in prevResults)
+        {
+            <tr><td>@result.Id</td><td>@result.Expression</td><td>@result.ResultString()</td></tr>
+        }
+    </table>
+}
